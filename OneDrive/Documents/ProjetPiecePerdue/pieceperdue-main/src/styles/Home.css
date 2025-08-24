@@ -1,0 +1,78 @@
+/* Conteneur principal */
+.home-container {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  padding: 20px;
+}
+
+/* Titre */
+.home-title {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* Wrapper pour centrer les boutons */
+.home-button-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+/* Conteneur des boutons en grille */
+.home-button-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Toujours 2 colonnes */
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  width: 350px; /* Taille fixe pour uniformiser */
+  margin: auto;
+}
+
+/* Style des boutons */
+.home-button {
+  background-color: black;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  padding: 15px;
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
+  width: 160px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: background-color 0.3s ease-in-out;
+}
+
+/* Effet au survol */
+.home-button:hover {
+  background-color: #222;
+}
+
+/* 🔹 Responsive : Maintenir l'affichage 2x2 sur mobile */
+@media screen and (max-width: 600px) {
+  .home-button-container {
+    grid-template-columns: repeat(2, 1fr); /* 2 colonnes */
+    gap: 10px;
+    width: 100%; /* Utiliser tout l'espace */
+    max-width: 320px;
+  }
+
+  .home-button {
+    width: 140px; /* Légèrement plus petit pour mobile */
+    height: 90px;
+    font-size: 12px;
+  }
+}

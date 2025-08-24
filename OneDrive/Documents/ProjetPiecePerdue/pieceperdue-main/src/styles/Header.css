@@ -1,0 +1,49 @@
+/* Style du Header */
+.header {
+    background-color: #ffffff;
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+  }
+  
+  /* Conteneur du Header */
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: auto;
+  }
+  
+  /* Style du logo */
+  .logo {
+    width: 150px;
+    height: auto;
+  }
+  
+  /* Titre du Header */
+  .header-title {
+    font-size: 20px;
+    font-weight: bold;
+    flex-grow: 1;
+    text-align: center;
+  }
+  
+  /* Navigation */
+  .header-nav {
+    display: flex;
+    gap: 15px;
+  }
+  
+  /* Liens */
+  .header-link {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease-in-out;
+  }
+  
+  .header-link:hover {
+    color: #d4edda;
+  }
+  
