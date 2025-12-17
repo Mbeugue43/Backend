@@ -1,0 +1,42 @@
+Algorithme ProduitEnPoints
+Variables
+   v1, v2 : Tableau[1..100]  Entiers   // vecteurs
+   ps : Entier                          // produit scalaire (par référence)
+   n, m, i, j : Entier                  // n = nombre de couples, m = dimension
+
+Procédure dot_product(VAR ps : Entier, v1 : Tableau, v2 : Tableau, m : Entier)
+Début
+   ps ← 0
+   Pour i ← 1 à m Faire
+       ps ← ps + v1[i] * v2[i]
+   FinPour
+FinProcédure
+
+Début
+   Écrire("Donner le nombre de couples de vecteurs : ")
+   Lire(n)
+
+   Pour j ← 1 à n Faire
+       Écrire("Donner la dimension des vecteurs : ")
+       Lire(m)
+
+       Écrire("Entrer les éléments du vecteur v1 : ")
+       Pour i ← 1 à m Faire
+           Lire(v1[i])
+       FinPour
+
+       Écrire("Entrer les éléments du vecteur v2 : ")
+       Pour i ← 1 à m Faire
+           Lire(v2[i])
+       FinPour
+
+       // Appel de la procédure
+       Appeler dot_product(ps, v1, v2, m)
+
+       Si ps = 0 Alors
+          Écrire("Les deux vecteurs sont orthogonaux.")
+       Sinon
+          Écrire("Les deux vecteurs NE sont PAS orthogonaux.")
+       FinSi
+   FinPour
+Fin

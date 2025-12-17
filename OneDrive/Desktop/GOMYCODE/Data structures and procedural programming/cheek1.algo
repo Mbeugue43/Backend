@@ -1,0 +1,31 @@
+ALGORITHM SommeDistincte // Calculer la somme des éléments distincts de deux ensembles
+// Début de l'algorithme
+VAR // DÉCLARATION DES VARIABLES
+   ensemble1, ensemble2 : ARRAY OF INTEGER // Deux ensembleembles d'entiers
+   somme,sommeDistincte,i, j : entier // Variables pour la somme et les indices de boucle
+   dejaPris : boolean // Indicateur pour vérifier si un élément a déjà été pris
+
+DEBUT // DÉBUT DU PROGRAMME
+   // Initialisation des ensembleembles
+   ensemble1 ← [3, 1, 7, 9] // Exemple d'initialisation
+   ensemble2 ← [2, 4, 1, 9, 3] // Exemple d'initialisation
+   somme ← 0 // Initialisation de la somme
+   // Vérifier si les éléments de ensemble1 sont dans ensemble2
+    POUR i de 0 à longueur(ensemble1)-1 pas de 1 FAIRE // Parcourir chaque élément de ensemble1
+         POUR j de 0 à longueur(ensemble2)-1 pas de 1  FAIRE // Parcourir chaque élément de ensemble2
+              SI ensemble1[i] === ensemble2[j] ALORS // Vérifier si l'élément est dans ensemble2
+                SommeCommun ← SommeCommun + ensemble1[i]*2// Ajouter à la somme des communs
+            FINSI
+        FINPOUR
+    FINPOUR
+         // Calculer la somme totale des éléments des deux ensembleembles
+    FOR i de 0 à longueur(ensemble1)-1 pas de 1 FAIRE // Parcourir chaque élément de ensemble1
+        somme ← somme + ensemble1[i] // Ajouter tous les éléments de ensemble1
+        FINPOUR
+    FOR j de 0 à longueur(ensemble2)-1 pas de 1 FAIRE //
+        somme ← somme + ensemble2[j] // Ajouter tous les éléments de ensemble2
+        FINPOUR
+    SommeDistincte ← somme - SommeCommun // Soustraire la somme des éléments communs
+
+   ECRIRE "Somme des éléments distincts = ", somme // Afficher le résultat
+FIN
