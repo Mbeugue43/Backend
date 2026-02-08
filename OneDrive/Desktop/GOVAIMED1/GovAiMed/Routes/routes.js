@@ -1,3 +1,4 @@
+// routes/index.js - Version corrigée et nettoyée
 const router = require('express').Router();
 const UserController = require('../Controllers/UserController');
 const ConsultationController = require('../Controllers/ConsultationController');
@@ -17,7 +18,7 @@ const {
 
 // ==================== AUTH ROUTES ====================
 router.post("/auth/register", authController.registerUser);  
-router.post("/auth/login", authController.loginUser);      
+router.post("/auth/login", authController.loginUser);       
 
 // ==================== JOURNAL ====================
 router.post('/journal', authorize, authorizeAdminOrSuperAdmin, JournalController.createNewJournalEntry);
@@ -34,10 +35,19 @@ router.put('/ordonnance/:id', authorize, authorizeMedecinOrAdmin, OrdonnanceCont
 router.delete('/ordonnance/:id', authorize, authorizeMedecinOrAdmin, OrdonnanceController.deleteOrdonnance);
 
 // ==================== DOSSIER MÉDICAL ====================
+// Créer un nouveau dossier
 router.post('/dossier', authorize, authorizeMedecinOrAdmin, DossierController.createNewDossier);
+
+// Route CRITIQUE pour le médecin connecté ✅
+router.get('/dossier/mes-dossiers', authorize, authorizeMedecin, DossierController.getMyDossiers);
+
+// Route pour récupérer tous les dossiers (admin)
 router.get('/dossiers', authorize, authorizeAdminOrSuperAdmin, DossierController.getAllDossiers);
-router.get('/mes-dossiers', authorize, authorizeMedecin, DossierController.getMyDossiers); // Médecins uniquement
-router.get('/dossier/:id', authorize, authorizeAdminOrSuperAdmin, DossierController.getDossierById);
+
+// Récupérer un dossier par ID
+router.get('/dossier/:id', authorize, authorizeMedecinOrAdmin, DossierController.getDossierById);
+
+// Mise à jour / suppression
 router.put('/dossier/:id', authorize, authorizeAdminOrSuperAdmin, DossierController.updateDossier);
 router.delete('/dossier/:id', authorize, authorizeAdminOrSuperAdmin, DossierController.deleteDossier);
 
@@ -70,5 +80,7 @@ router.get('/service/:id', authorize, authorizeRoles(['Medecin','Assistant','Adm
 router.put('/service/:id', authorize, authorizeAdminOrSuperAdmin, ServiceController.updateService);
 router.delete('/service/:id', authorize, authorizeAdminOrSuperAdmin, ServiceController.deleteService);
 
+// ==================== USER PROFILES ====================
+router.get('/patient/me', authorize, UserController.getMe);
 
 module.exports = router;

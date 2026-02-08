@@ -128,11 +128,28 @@ const getAllPatients = async (req, res) => {
   }
 };
 
+// Récupérer le patient connecté
+const getMe = async (req, res) => {
+  try {
+    const id = req.user.id; // Depuis le middleware authorize
+    const patient = await User.findById(id).select('-password'); // On n'envoie jamais le mot de passe
+    if (!patient) return res.status(404).json({ message: "Patient non trouvé" });
+
+    return res.status(200).json(patient);
+  } catch (error) {
+    console.error("Erreur getMe:", error);
+    return res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+};
+
+
+
  module.exports = {
      createNewUser,
      getAllUsers,
      getUserById,
      updateUser,
      deleteUser,
-     getAllPatients
+     getAllPatients,
+        getMe
  };  
