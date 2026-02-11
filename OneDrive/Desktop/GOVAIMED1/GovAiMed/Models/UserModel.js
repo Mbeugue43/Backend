@@ -1,157 +1,68 @@
 const mongoose = require('mongoose');
 
-// la creation et la structure des sous-schemas pour les different profils des utilisateurs
 
-//admin profile 
+   // Sous-schemas des profils
+
+
+// Admin
 const adminSchema = new mongoose.Schema({
-    adminCode : {
-        type : String,
-        required : true,
-        unique : true,
-    },
-    permissions:{
-        type :[String],
-        default:[]
-    }
-});
+  adminCode: { type: String, required: true, unique: true },
+  permissions: { type: [String], default: [] }
+}, { _id: false });
 
-//moderatorSchema
-const moderatorSchema= new mongoose.Schema({
-    moderatedSections : {
-        type :{String},
-        default :[]
-    }
+// Modérateur
+const moderatorSchema = new mongoose.Schema({
+  moderatedSections: { type: [String], default: [] }
+}, { _id: false });
 
-})
-
-
-//patient profile
+// Patient
 const patientSchema = new mongoose.Schema({
-    patientProfile: {
-        dateNaissance: {
-            type: Date
-        },
-        sexe: {
-            type: String,
-            enum: ['M', 'F']
-        },
-        contact: {
-            type: String
-        }
-    },
-});
+  dateNaissance: { type: Date },
+  sexe: { type: String, enum: ['M', 'F'] },
+  contact: { type: String }
+}, { _id: false });
 
-//medecin profile
-const medecinSchema = new mongoose.Schema({
-
-    medecinProfile: {
-        specialite: {
-            type: String
-        },
-        serviceId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Service'
-        }
-    },
-});
-
-//pharmacien profile
+// Pharmacien
 const pharmacienSchema = new mongoose.Schema({
-     // pharmacie
-    pharmacienProfile: {
-        nomPharmacie: {
-            type: String
-        },
-        adressePharmacie: {
-            type: String
-        }
-    },
-});
+  nomPharmacie: { type: String },
+  adressePharmacie: { type: String }
+}, { _id: false });
 
-//assistant profile
+// Assistant
 const assistantSchema = new mongoose.Schema({
-    assistantProfile: {
-        poste: {
-            type: String,        },
-        serviceId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Service'
-        }
-    }
-});
+  poste: { type: String },
+  serviceId: { type: mongoose.Schema.Types.ObjectId, ref: 'Service' }
+}, { _id: false });
 
+/* =========================
+   Schéma principal User
+========================= */
 
-
-
-
-//schema principal utilisateur
 const userSchema = new mongoose.Schema({
-    fullName: {
-        type: String,
-        required: true,
-        max: 50,
-        min: 3
-    },
-    date_of_birth: {
-        type: Date,
-    // rendu optionnel pour permettre une inscription simple depuis le frontend
-    required: false
-    },
-    sexe: {
-        type: String,
-        enum: ['M', 'F'],
-    },
+  fullName: { type: String, required: true, minlength: 3, maxlength: 50 },
+  date_of_birth: { type: Date },
+  sexe: { type: String, enum: ['M', 'F'] },
+  email: { type: String, required: true, unique: true, lowercase: true },
+  password: { type: String, required: true },
+  role: {
+    type: String,
+    enum: [
+      'Patient', 'Medecin', 'Pharmacien', 'Assistant',
+      'AideSoignant', 'Stagiaire', 'MediateurNumerique',
+      'Admin', 'SuperAdmin', 'Moderateur'
+    ],
+    default: 'Patient'
+  },
+  statut: { type: String, enum: ['ACTIF', 'INACTIF'], default: 'ACTIF' },
+  ref: { type: String },
 
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-    },
+  // patientDetails: { type: patientSchema, required: function () { return this.role === 'Patient'; } },
+  medecinDetails: { type: mongoose.Schema.Types.Mixed }, // le modèle Medecin est séparé
+  pharmacienDetails: { type: pharmacienSchema, required: function () { return this.role === 'Pharmacien'; } },
+  assistantDetails: { type: assistantSchema, required: function () { return this.role === 'Assistant'; } },
+  adminDetails: { type: adminSchema, required: function () { return this.role === 'Admin' || this.role === 'SuperAdmin'; } },
+  moderatorDetails: { type: moderatorSchema, required: function () { return this.role === 'Moderateur'; } }
 
-    password: {
-        type: String,
-        required: true
-    },
-
-    role: {
-        type: String,
-        enum: [
-            'Patient', 
-            'Medecin', 
-            'Pharmacien', 
-            'Assistant', 
-            'AideSoignant',
-            'Stagiaire',
-            'MediateurNumerique',
-            'Admin', 
-            'SuperAdmin',
-            'Moderateur'
-        ],
-        default : 'Patient'
-    },
-
-    statut: {
-        type: String,
-        enum: ['ACTIF', 'INACTIF'],
-        default: 'ACTIF'
-    },
-    ref: {
-        type: String
-    },
-    adminDetails:{
-        type : adminSchema,
-        required : function(){return this.role === 'Admin';}
-    },
-    moderatorDetails : {
-        type : moderatorSchema,
-        // required : function(){return this.role === 'Moderateur';}
-    }
-
-
-
-},
-{ timestamps: true });
-   
-
+}, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

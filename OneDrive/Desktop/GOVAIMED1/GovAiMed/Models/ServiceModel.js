@@ -1,18 +1,23 @@
 const mongoose = require('mongoose');
 
+
+  // Schéma Service médical
+
+
 const serviceSchema = new mongoose.Schema(
   {
-    //  Nom du service médical
+    // Nom du service médical
     nom: {
       type: String,
       required: true,
-
+      trim: true,
+      unique: true
     },
 
     // Description du service
     description: {
       type: String,
-  
+      trim: true
     },
 
     // Type de service
@@ -30,7 +35,7 @@ const serviceSchema = new mongoose.Schema(
       default: 'AUTRE'
     },
 
-    //  Médecins rattachés au service
+    // Médecins rattachés au service
     medecins: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -38,7 +43,7 @@ const serviceSchema = new mongoose.Schema(
       }
     ],
 
-    //  Assistants rattachés
+    // Assistants rattachés au service
     assistants: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -46,10 +51,11 @@ const serviceSchema = new mongoose.Schema(
       }
     ],
 
-    // Durée moyenne consultation (minutes)
+    // Durée moyenne d’une consultation (en minutes)
     dureeMoyenneConsultation: {
       type: Number,
-      default: 15
+      default: 15,
+      min: 5
     },
 
     // Statut du service

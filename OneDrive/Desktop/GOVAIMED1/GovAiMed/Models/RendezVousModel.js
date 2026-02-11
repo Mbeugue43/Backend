@@ -1,23 +1,31 @@
 const mongoose = require('mongoose');
 
+  // Schéma Rendez-Vous
+
+
 const rendezVousSchema = new mongoose.Schema(
   {
-    // Identifiants simples (version débutant)
+    // Patient concerné
     patientId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
       required: true
     },
 
+    // Médecin concerné
     medecinId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
       required: true
     },
 
+    // Service (optionnel)
     serviceId: {
-      type: String
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Service'
     },
 
-    // Date et heure du rendez-vous
+    // Date et heure prévues du rendez-vous
     dateRendezVous: {
       type: Date,
       required: true
@@ -26,7 +34,8 @@ const rendezVousSchema = new mongoose.Schema(
     // Rang dans la file d’attente
     rang: {
       type: Number,
-      required: true
+      required: true,
+      min: 1
     },
 
     // Statut du rendez-vous
@@ -54,10 +63,13 @@ const rendezVousSchema = new mongoose.Schema(
 
     // Commentaire guichet / assistant
     commentaire: {
-      type: String
+      type: String,
+      trim: true
     }
   },
-  { timestamps: true }
+  {
+    timestamps: true
+  }
 );
 
 module.exports = mongoose.model('RendezVous', rendezVousSchema);

@@ -1,24 +1,23 @@
 const mongoose = require('mongoose');
 const Service = require('../Models/ServiceModel');
 
-//create new service
+
+  // Créer un nouveau service
 
 const createNewService = async (req, res) => {
   try {
-    const {
-      nom,
-      description,
-      type,
-      dureeMoyenneConsultation,
-      statut
-    } = req.body;
+    const { nom, description, type, dureeMoyenneConsultation, statut } = req.body;
+
+    if (!nom) {
+      return res.status(400).json({ message: "Le nom du service est requis." });
+    }
 
     const newService = new Service({
       nom,
       description,
       type,
       dureeMoyenneConsultation,
-      statut
+      statut: statut || 'ACTIF'
     });
 
     const savedService = await newService.save();
@@ -30,7 +29,6 @@ const createNewService = async (req, res) => {
 
   } catch (error) {
     console.error('CREATE SERVICE ERROR:', error);
-
     return res.status(500).json({
       message: 'Erreur lors de la création du service',
       error: error.message
@@ -39,59 +37,117 @@ const createNewService = async (req, res) => {
 };
 
 
-//get all services
+  // Récupérer tous les services
+
 const getAllServices = async (req, res) => {
-    try {
-        const services = await Service.find();
-       return res.status(200).json(services);
-    } catch (error) {
-       return res.status(500).json({ message: 'Error fetching services', error });
-    }
+  try {
+    const services = await Service.find();
+    return res.status(200).json(services);
+  } catch (error) {
+    console.error('GET ALL SERVICES ERROR:', error);
+    return res.status(500).json({
+      message: 'Erreur lors de la récupération des services',
+      error: error.message
+    });
+  }
 };
-//get service by id
+
+
+  // Récupérer un service par ID
+
 const getServiceById = async (req, res) => {
-    try {   
-        const { id } = req.params;
-        const service = await Service.findById(id); 
-         return res.status(200).json(service);
-    } catch (error) {
-       return res.status(500).json({ message: 'Error fetching service', error });
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "ID service invalide." });
     }
+
+    const service = await Service.findById(id);
+
+    if (!service) {
+      return res.status(404).json({ message: "Service introuvable." });
+    }
+
+    return res.status(200).json(service);
+
+  } catch (error) {
+    console.error('GET SERVICE BY ID ERROR:', error);
+    return res.status(500).json({
+      message: 'Erreur lors de la récupération du service',
+      error: error.message
+    });
+  }
 };
 
-//update service
+
+   // Mettre à jour un service
+
 const updateService = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { name, description } = req.body;
-        const updatedService = await Service.findByIdAndUpdate(id, {
-            name,
-            description
-        }, { new: true });
-       return res.status(200).json({ message: 'Service updated successfully', updatedService });
+  try {
+    const { id } = req.params;
+    const { nom, description, type, dureeMoyenneConsultation, statut } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "ID service invalide." });
     }
-    catch (error) {
-       return res.status(500).json({ message: 'Error updating service', error });
+
+    const updatedService = await Service.findByIdAndUpdate(
+      id,
+      { nom, description, type, dureeMoyenneConsultation, statut },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedService) {
+      return res.status(404).json({ message: "Service introuvable." });
     }
-};  
+
+    return res.status(200).json({
+      message: 'Service mis à jour avec succès',
+      service: updatedService
+    });
+
+  } catch (error) {
+    console.error('UPDATE SERVICE ERROR:', error);
+    return res.status(500).json({
+      message: 'Erreur lors de la mise à jour du service',
+      error: error.message
+    });
+  }
+};
 
 
-//delete service
+  // Supprimer un service
+
 const deleteService = async (req, res) => {
-    try {   
-        const { id } = req.params;
-        await Service.findByIdAndDelete(id);
-       return res.status(200).json({ message: 'Service deleted successfully' });
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "ID service invalide." });
     }
-    catch (error) {
-       return res.status(500).json({ message: 'Error deleting service', error });
+
+    const deletedService = await Service.findByIdAndDelete(id);
+
+    if (!deletedService) {
+      return res.status(404).json({ message: "Service introuvable." });
     }
+
+    return res.status(200).json({ message: 'Service supprimé avec succès' });
+
+  } catch (error) {
+    console.error('DELETE SERVICE ERROR:', error);
+    return res.status(500).json({
+      message: 'Erreur lors de la suppression du service',
+      error: error.message
+    });
+  }
 };
 
 module.exports = {
-    createNewService,
-    getAllServices,
-    getServiceById,
-    updateService,
-    deleteService
+  createNewService,
+  getAllServices,
+  getServiceById,
+  updateService,
+  deleteService
 };

@@ -1,47 +1,77 @@
 const mongoose = require('mongoose');
 
 
-// Sous-schéma pour les médicaments dans une ordonnance
-const medicamentSchema = new mongoose.Schema({
+   // Sous-schéma Médicament
+
+
+const medicamentSchema = new mongoose.Schema(
+  {
     nomMedicament: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
+      trim: true
     },
-    dosage: {   
-        type: String,
-  
+
+    dosage: {
+      type: String,
+      trim: true
     },
+
     frequence: {
-        type: String,
-
+      type: String,
+      trim: true
     },
+
     duree: {
-        type: String,
+      type: String,
+      trim: true
     }
-}, { _id: false });
+  },
+  { _id: false }
+);
 
-// Schéma principal pour l'ordonnance
-const ordonnanceSchema = new mongoose.Schema({
+
+  // Schéma principal Ordonnance
+
+
+const ordonnanceSchema = new mongoose.Schema(
+  {
+    // Patient concerné
     patientId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-  
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
     },
+
+    // Médecin prescripteur
     medecinId: {
-        type: mongoose.Schema.Types.ObjectId,   
-        ref: 'User',
-       
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
     },
+
+    // Date de l’ordonnance
     dateOrdonnance: {
-        type: Date,
-        default: Date.now   
+      type: Date,
+      default: Date.now
     },
+
+    // Liste des médicaments
     medicaments: {
-        type: [medicamentSchema],
-        
+      type: [medicamentSchema],
+      required: true,
+      default: []
     },
+
+    // Instructions complémentaires
     instructionsSupplementaires: {
-        type: String
+      type: String,
+      trim: true
     }
-});
+  },
+  {
+    timestamps: true
+  }
+);
+
 module.exports = mongoose.model('Ordonnance', ordonnanceSchema);

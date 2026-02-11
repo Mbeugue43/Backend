@@ -1,60 +1,104 @@
 const mongoose = require('mongoose');
 
+
+   //Schéma Consultation
+
+
 const consultationSchema = new mongoose.Schema(
   {
+    // Dossier médical lié
     dossierMedicalId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'DossierMedical',
       required: true
     },
 
+    // Patient concerné
     patientId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
       required: true
     },
 
+    // Médecin consulté
     medecinId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
       required: true
     },
 
+    // Date de la consultation
     dateConsultation: {
       type: Date,
       default: Date.now
     },
 
+    // Motif de consultation
     motif: {
       type: String,
-      required: true
+      required: true,
+      trim: true
     },
 
-    symptomes: [String],
+    // Symptômes observés
+    symptomes: {
+      type: [String],
+      default: []
+    },
 
-    diagnostic: String,
+    // Diagnostic médical
+    diagnostic: {
+      type: String,
+      trim: true
+    },
 
-    recommandations: String,
+    // Recommandations
+    recommandations: {
+      type: String,
+      trim: true
+    },
 
-    examensDemandes: [String],
+    // Examens demandés
+    examensDemandes: {
+      type: [String],
+      default: []
+    },
 
-    ordonnanceId: String,   // plus d’ObjectId ici
+    // Ordonnance liée (optionnelle)
+    ordonnanceId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Ordonnance'
+    },
 
+    // Constantes vitales
     constantes: {
-      temperature: Number,
-      tension: String,
-      poids: Number
+      temperature: {
+        type: Number
+      },
+      tension: {
+        type: String
+      },
+      poids: {
+        type: Number
+      }
     },
 
+    // Statut de la consultation
     statut: {
       type: String,
       enum: ['EN_COURS', 'TERMINEE', 'ANNULEE'],
       default: 'EN_COURS'
     },
 
+    // Diagnostic validé
     diagnosticValide: {
       type: Boolean,
       default: false
     }
   },
-  { timestamps: true }
+  {
+    timestamps: true
+  }
 );
 
 module.exports = mongoose.model('Consultation', consultationSchema);
