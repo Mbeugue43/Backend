@@ -309,6 +309,27 @@ const proposerNouvelleDate = async (req, res) => {
   }
 };
 
+
+/**
+ * TOUS LES RENDEZ-VOUS DU MÉDECIN
+ */
+const getRendezVousMedecin = async (req, res) => {
+  try {
+    const medecinId = req.user._id;
+
+    const rendezvous = await RendezVous.find({ medecinId })
+      .populate("patientId", "fullName email")
+      .populate("serviceId", "nom description")
+      .sort({ dateRendezVous: -1 });
+
+    res.status(200).json(rendezvous);
+  } catch (error) {
+    console.error("Erreur getRendezVousMedecin:", error);
+    res.status(500).json({ message: "Erreur récupération rendez-vous médecin" });
+  }
+};
+
+
 module.exports = {
   createNewRendezVous,
   getAllRendezVous,
@@ -318,4 +339,6 @@ module.exports = {
   getTodayRendezVousMedecin,
   patientSuivant,
   proposerNouvelleDate,
+  getRendezVousMedecin,
 };
+

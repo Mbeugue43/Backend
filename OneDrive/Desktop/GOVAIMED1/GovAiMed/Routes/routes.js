@@ -67,6 +67,8 @@ router.get("/dossiers/:id", authorize, DossierController.getDossierById);
 
 /* ========================= RENDEZ-VOUS ========================= */
 
+
+// Création
 router.post(
   "/rendezvous",
   authorize,
@@ -74,14 +76,7 @@ router.post(
   RendezVousController.createNewRendezVous
 );
 
-// Médecins visibles pour prise de RDV
-router.get(
-  "/users/medecins-rdv",
-  authorize,
-  authorizeRoles(["Patient", "Assistant", "Admin", "SuperAdmin"]),
-  UserController.getMedecinsForPatients
-);
-
+// Tous les RDV (Admin / Medecin / etc)
 router.get(
   "/rendezvous",
   authorize,
@@ -89,6 +84,31 @@ router.get(
   RendezVousController.getAllRendezVous
 );
 
+// 🔥 RDV DU MÉDECIN CONNECTÉ (IMPORTANT)
+router.get(
+  "/rendezvous/medecin",
+  authorize,
+  authorizeRoles(["Medecin"]),
+  RendezVousController.getRendezVousMedecin
+);
+
+// RDV du médecin aujourd’hui
+router.get(
+  "/rendezvous/medecin/aujourdhui",
+  authorize,
+  authorizeRoles(["Medecin"]),
+  RendezVousController.getTodayRendezVousMedecin
+);
+
+// Patient suivant
+router.post(
+  "/rendezvous/medecin/patient-suivant",
+  authorize,
+  authorizeRoles(["Medecin"]),
+  RendezVousController.patientSuivant
+);
+
+// 🔒 UN RDV PAR ID (TOUJOURS APRÈS LES ROUTES SPÉCIFIQUES)
 router.get(
   "/rendezvous/:id",
   authorize,
@@ -110,20 +130,14 @@ router.delete(
   RendezVousController.deleteRendezVous
 );
 
-// Patient suivant
-router.post(
-  "/rendezvous/medecin/patient-suivant",
-  authorize,
-  authorizeRoles(["Medecin"]),
-  RendezVousController.patientSuivant
-);
 
-// Rendez-vous du médecin aujourd’hui
+/* ========================= USERS ========================= */
+
 router.get(
-  "/rendezvous/medecin/aujourdhui",
+  "/users/medecins-rdv",
   authorize,
-  authorizeRoles(["Medecin"]),
-  RendezVousController.getTodayRendezVousMedecin
+  authorizeRoles(["Patient", "Assistant", "Admin", "SuperAdmin"]),
+  UserController.getMedecinsForPatients
 );
 
 
