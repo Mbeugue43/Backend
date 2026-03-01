@@ -1,75 +1,97 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-  // Schéma Rendez-Vous
-
-
+/**
+ * Schéma Rendez-Vous
+ */
 const rendezVousSchema = new mongoose.Schema(
   {
     // Patient concerné
     patientId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true
+      ref: "User",
+      required: true,
     },
 
     // Médecin concerné
     medecinId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true
+      ref: "User",
+      required: true,
     },
 
     // Service (optionnel)
     serviceId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Service'
+      ref: "Service",
+      default: null,
     },
 
-    // Date et heure prévues du rendez-vous
+    // Date et heure du rendez-vous
     dateRendezVous: {
       type: Date,
-      required: true
+      required: [true, "La date du rendez-vous est obligatoire"],
+      validate: {
+        validator: function (value) {
+          // ✅ Si on ne modifie pas la date, on ne revalide pas
+          if (!this.isModified("dateRendezVous")) return true;
+
+          // ✅ Vérifier que la date est valide
+          if (!value || isNaN(new Date(value).getTime())) return false;
+
+          // ✅ Tolérance d'1 minute
+          return new Date(value).getTime() >= Date.now() - 60000;
+        },
+        message: "La date du rendez-vous ne peut pas être passée",
+      },
     },
 
-    // Rang dans la file d’attente
+    // Rang automatique
     rang: {
       type: Number,
       required: true,
-      min: 1
+      min: [1, "Le rang doit être supérieur ou égal à 1"],
     },
 
     // Statut du rendez-vous
     statut: {
       type: String,
-      enum: ['EN_ATTENTE', 'EN_COURS', 'TERMINE', 'ANNULE'],
-      default: 'EN_ATTENTE'
+      enum: ["EN_ATTENTE", "EN_COURS", "TERMINE", "ANNULE"],
+      default: "EN_ATTENTE",
     },
 
-    // Ticket payé ou non
+    // Ticket payé
     ticketPaye: {
       type: Boolean,
-      default: false
+      default: false,
     },
 
-    // Heure réelle de début
+    // Heures réelles
     heureDebut: {
-      type: Date
+      type: Date,
+      default: null,
     },
 
-    // Heure réelle de fin
     heureFin: {
-      type: Date
+      type: Date,
+      default: null,
     },
 
-    // Commentaire guichet / assistant
+    // Commentaire
     commentaire: {
       type: String,
-      trim: true
-    }
+      trim: true,
+      default: "",
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 
-module.exports = mongoose.model('RendezVous', rendezVousSchema);
+// 🔒 Empêcher doublon de rang pour un même médecin à une même date
+rendezVousSchema.index(
+  { medecinId: 1, dateRendezVous: 1, rang: 1 },
+  { unique: true }
+);
+
+module.exports = mongoose.model("RendezVous", rendezVousSchema);

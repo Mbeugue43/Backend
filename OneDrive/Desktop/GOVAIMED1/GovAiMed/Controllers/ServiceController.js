@@ -143,11 +143,25 @@ const deleteService = async (req, res) => {
     });
   }
 };
+// 🔓 Services visibles pour prise de rendez-vous (Patient)
+const getServicesForRdv = async (req, res) => {
+  try {
+    const services = await Service.find({ statut: "ACTIF" })
+      .select("_id nom description");
 
+    return res.status(200).json(services);
+  } catch (error) {
+    console.error("Erreur getServicesForRdv:", error);
+    return res.status(500).json({
+      message: "Erreur récupération services"
+    });
+  }
+};
 module.exports = {
   createNewService,
   getAllServices,
   getServiceById,
   updateService,
-  deleteService
+  deleteService,
+  getServicesForRdv
 };

@@ -56,6 +56,9 @@ const userSchema = new mongoose.Schema({
   statut: { type: String, enum: ['ACTIF', 'INACTIF'], default: 'ACTIF' },
   ref: { type: String },
 
+  resetPasswordToken: String,
+resetPasswordExpire: Date,
+
   // patientDetails: { type: patientSchema, required: function () { return this.role === 'Patient'; } },
   medecinDetails: { type: mongoose.Schema.Types.Mixed }, // le modèle Medecin est séparé
   pharmacienDetails: { type: pharmacienSchema, required: function () { return this.role === 'Pharmacien'; } },

@@ -163,6 +163,31 @@ const getDossiers = async (req, res) => {
   }
 };
 
+// 🔓 Liste des médecins pour les patients
+const getMedecinsForPatients = async (req, res) => {
+  try {
+    const medecins = await User.find({ role: "Medecin", statut: "ACTIF" })
+      .select("_id fullName email")
+      .sort({ fullName: 1 });
+
+    // Formater pour inclure initiales
+    const medecinsFormates = medecins.map((med) => ({
+      _id: med._id,
+      fullName: med.fullName,
+      initiale: med.fullName
+        .split(" ")
+        .map((n) => n[0].toUpperCase())
+        .join("."),
+      email: med.email,
+    }));
+
+    res.status(200).json(medecinsFormates);
+  } catch (error) {
+    console.error("Erreur getMedecinsForPatients:", error);
+    res.status(500).json({ message: "Erreur récupération médecins" });
+  }
+};
+
 module.exports = {
   createNewUser,
   getAllUsers,
@@ -171,5 +196,6 @@ module.exports = {
   deleteUser,
   getAllPatients,
   getMe,
-  getDossiers
+  getDossiers,
+  getMedecinsForPatients 
 };

@@ -1,5 +1,6 @@
 const User = require("../Models/UserModel");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 
 // Générer un token JWT
@@ -127,7 +128,87 @@ const loginUser = async (req, res) => {
   }
 };
 
+
+
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user)
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+
+    // Génération token sécurisé
+    const resetToken = crypto.randomBytes(32).toString("hex");
+
+    // Génération OTP 6 chiffres
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    user.resetPasswordToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+
+    user.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 min
+    user.resetPasswordOTP = await bcrypt.hash(otp, 10);
+
+    await user.save();
+
+    const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
+
+    console.log("Lien:", resetUrl);
+    console.log("OTP:", otp);
+
+    // Ici normalement tu envoies un email avec nodemailer
+
+    res.json({
+      message: "Email de réinitialisation envoyé.",
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { email, password, otp } = req.body;
+
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(token)
+      .digest("hex");
+
+    const user = await User.findOne({
+      email,
+      resetPasswordToken: hashedToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    if (!user)
+      return res.status(400).json({ message: "Lien invalide ou expiré." });
+
+    const isOtpValid = await bcrypt.compare(otp, user.resetPasswordOTP);
+    if (!isOtpValid)
+      return res.status(400).json({ message: "Code de confirmation invalide." });
+
+    user.password = await bcrypt.hash(password, 12);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    user.resetPasswordOTP = undefined;
+
+    await user.save();
+
+    res.json({ message: "Mot de passe mis à jour avec succès." });
+
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};
 module.exports = {
   registerUser,
-  loginUser
+  loginUser,
+  forgotPassword,
+  resetPassword
 };
