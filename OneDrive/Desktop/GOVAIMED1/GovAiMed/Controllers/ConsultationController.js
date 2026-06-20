@@ -8,7 +8,7 @@ const createNewConsultation = async (req, res) => {
   try {
     const consultationData = req.body;
 
-    // Validation des IDs si fournis
+    // Validation des ID
     if (consultationData.patientId && !mongoose.Types.ObjectId.isValid(consultationData.patientId)) {
       return res.status(400).json({ message: "ID patient invalide." });
     }

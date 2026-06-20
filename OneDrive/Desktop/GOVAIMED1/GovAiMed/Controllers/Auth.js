@@ -76,7 +76,7 @@ const registerUser = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("❌ REGISTER ERROR:", error.message);
+    console.error("REGISTER ERROR:", error.message);
     return res.status(500).json({
       message: "Erreur interne du serveur.",
       error: error.message
@@ -120,7 +120,7 @@ const loginUser = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("❌ LOGIN ERROR:", error.message);
+    console.error("LOGIN ERROR:", error.message);
     return res.status(500).json({
       message: "Erreur interne du serveur.",
       error: error.message

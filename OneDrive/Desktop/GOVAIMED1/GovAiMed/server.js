@@ -7,13 +7,15 @@ const routes = require('./Routes/routes');
 dotenv.config();
 require('./config/db');
 
+//app
 const app = express();
 const PORT = 5000;
 
-
+//middlewares
 app.use(cors());
 app.use(express.json());
 
+//welcome message
 app.get('/', (req, res) => {
     res.send('API is running...');
 });
@@ -22,6 +24,7 @@ app.get('/', (req, res) => {
 //routes
 app.use('/api', routes);
 
+//Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

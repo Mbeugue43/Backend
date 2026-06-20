@@ -34,9 +34,9 @@ const assistantSchema = new mongoose.Schema({
   serviceId: { type: mongoose.Schema.Types.ObjectId, ref: 'Service' }
 }, { _id: false });
 
-/* =========================
-   Schéma principal User
-========================= */
+
+  // Schéma principal User
+
 
 const userSchema = new mongoose.Schema({
   fullName: { type: String, required: true, minlength: 3, maxlength: 50 },

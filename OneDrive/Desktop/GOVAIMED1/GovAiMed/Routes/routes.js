@@ -25,7 +25,7 @@ const {
 
 
 
-/* ========================= AUTH ========================= */
+// AUTH
 
 router.post("/auth/register", authController.registerUser);
 router.post("/auth/login", authController.loginUser);
@@ -34,7 +34,7 @@ router.post("/auth/reset-password/:token", authController.resetPassword);
 
 
 
-/* ========================= JOURNAL ========================= */
+//JOURNAL 
 
 router.post("/journal", authorize, authorizeAdminOrSuperAdmin, JournalController.createNewJournalEntry);
 router.get("/journal", authorize, authorizeAdminOrSuperAdmin, JournalController.getAllJournalEntries);
@@ -44,7 +44,7 @@ router.delete("/journal/:id", authorize, authorizeAdminOrSuperAdmin, JournalCont
 
 
 
-/* ========================= ORDONNANCES ========================= */
+// ORDONNANCES
 
 router.post("/ordonnance", authorize, authorizeMedecinOrAdmin, OrdonnanceController.createNewOrdonnance);
 router.get("/ordonnances", authorize, authorizeMedecinOrAdmin, OrdonnanceController.getAllOrdonnances);
@@ -54,7 +54,7 @@ router.delete("/ordonnance/:id", authorize, authorizeMedecinOrAdmin, OrdonnanceC
 
 
 
-/* ========================= DOSSIERS ========================= */
+//DOSSIERS
 
 router.post("/dossiers", authorize, authorizeMedecin, DossierController.createDossier);
 router.get("/medecin/dossiers", authorize, authorizeMedecin, DossierController.getMyDossiers);
@@ -65,7 +65,7 @@ router.get("/dossiers/:id", authorize, DossierController.getDossierById);
 
 
 
-/* ========================= RENDEZ-VOUS ========================= */
+//RENDEZ-VOUS 
 
 
 // Création
@@ -76,7 +76,7 @@ router.post(
   RendezVousController.createNewRendezVous
 );
 
-// Tous les RDV (Admin / Medecin / etc)
+// Tous les RDV (Admin / Medecin ...)
 router.get(
   "/rendezvous",
   authorize,
@@ -84,7 +84,7 @@ router.get(
   RendezVousController.getAllRendezVous
 );
 
-// 🔥 RDV DU MÉDECIN CONNECTÉ (IMPORTANT)
+//  RDV DU MÉDECIN CONNECTÉ 
 router.get(
   "/rendezvous/medecin",
   authorize,
@@ -108,7 +108,7 @@ router.post(
   RendezVousController.patientSuivant
 );
 
-// 🔒 UN RDV PAR ID (TOUJOURS APRÈS LES ROUTES SPÉCIFIQUES)
+// UN RDV PAR ID 
 router.get(
   "/rendezvous/:id",
   authorize,
@@ -131,7 +131,7 @@ router.delete(
 );
 
 
-/* ========================= USERS ========================= */
+// USERS 
 
 router.get(
   "/users/medecins-rdv",
@@ -142,7 +142,7 @@ router.get(
 
 
 
-/* ========================= CONSULTATIONS ========================= */
+//CONSULTATIONS 
 
 router.post("/consultation", authorize, authorizeMedecinOrAdmin, ConsultationController.createNewConsultation);
 router.get("/consultations", authorize, authorizeMedecinOrAdmin, ConsultationController.getAllConsultations);
@@ -152,7 +152,7 @@ router.delete("/consultations/:id", authorize, authorizeMedecinOrAdmin, Consulta
 
 
 
-/* ========================= USERS ========================= */
+//USERS
 
 router.post("/users", authorize, authorizeAdminOrSuperAdmin, UserController.createNewUser);
 router.get("/users", authorize, authorizeAdminOrSuperAdmin, UserController.getAllUsers);
@@ -163,7 +163,7 @@ router.delete("/users/:id", authorize, authorizeAdminOrSuperAdmin, UserControlle
 
 
 
-/* ========================= SERVICES ========================= */
+//SERVICES 
 
 router.post("/services", authorize, authorizeAdminOrSuperAdmin, ServiceController.createNewService);
 

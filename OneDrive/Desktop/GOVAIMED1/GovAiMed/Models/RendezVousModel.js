@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
-/**
- * Schéma Rendez-Vous
+/*
+  Schéma Rendez-Vous
  */
 const rendezVousSchema = new mongoose.Schema(
   {

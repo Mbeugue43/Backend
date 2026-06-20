@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
 const RendezVous = require("../Models/RendezVousModel");
 
-/**
- * CRÉER UN RENDEZ-VOUS (RANG AUTO + SÉCURITÉ)
- */
+//CRÉER UN RENDEZ-VOUS (RANG AUTO + SÉCURITÉ)
+ 
 const createNewRendezVous = async (req, res) => {
   try {
     let { patientId, medecinId, serviceId, dateRendezVous, commentaire } =
@@ -71,9 +70,8 @@ const createNewRendezVous = async (req, res) => {
   }
 };
 
-/**
- * RÉCUPÉRER TOUS LES RENDEZ-VOUS
- */
+// RÉCUPÉRER TOUS LES RENDEZ-VOUS
+
 const getAllRendezVous = async (req, res) => {
   try {
     const rendezvous = await RendezVous.find()
@@ -88,9 +86,8 @@ const getAllRendezVous = async (req, res) => {
   }
 };
 
-/**
- * RÉCUPÉRER UN RENDEZ-VOUS PAR ID
- */
+// RÉCUPÉRER UN RENDEZ-VOUS PAR ID
+
 const getRendezVousById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -115,9 +112,8 @@ const getRendezVousById = async (req, res) => {
   }
 };
 
-/**
- * METTRE À JOUR UN RENDEZ-VOUS (STATUT CONTRÔLÉ)
- */
+// METTRE À JOUR UN RENDEZ-VOUS (STATUT CONTRÔLÉ)
+
 const updateRendezVous = async (req, res) => {
   try {
     const { id } = req.params;
@@ -163,9 +159,8 @@ const transitions = {
   }
 };
 
-/**
- * SUPPRIMER UN RENDEZ-VOUS
- */
+// SUPPRIMER UN RENDEZ-VOUS
+
 const deleteRendezVous = async (req, res) => {
   try {
     const { id } = req.params;
@@ -186,9 +181,8 @@ const deleteRendezVous = async (req, res) => {
   }
 };
 
-/**
- * RENDEZ-VOUS DU MÉDECIN – AUJOURD’HUI
- */
+// RENDEZ-VOUS DU MÉDECIN – AUJOURD’HUI
+
 const getTodayRendezVousMedecin = async (req, res) => {
   try {
     const medecinId = req.user._id;
@@ -216,9 +210,8 @@ const getTodayRendezVousMedecin = async (req, res) => {
   }
 };
 
-/**
- * PATIENT SUIVANT (FILE D’ATTENTE)
- */
+// PATIENT SUIVANT (FILE D’ATTENTE)
+
 const patientSuivant = async (req, res) => {
   try {
     const medecinId = req.user._id;
@@ -270,9 +263,8 @@ const patientSuivant = async (req, res) => {
   }
 };
 
-/**
- * PROPOSER UNE NOUVELLE DATE
- */
+// PROPOSER UNE NOUVELLE DATE
+
 const proposerNouvelleDate = async (req, res) => {
   try {
     const { id } = req.params;
@@ -310,9 +302,8 @@ const proposerNouvelleDate = async (req, res) => {
 };
 
 
-/**
- * TOUS LES RENDEZ-VOUS DU MÉDECIN
- */
+// TOUS LES RENDEZ-VOUS DU MÉDECIN
+ 
 const getRendezVousMedecin = async (req, res) => {
   try {
     const medecinId = req.user._id;

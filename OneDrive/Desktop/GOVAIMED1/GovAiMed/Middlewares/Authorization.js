@@ -3,6 +3,7 @@ const User = require('../Models/UserModel');
 
 
   // Middleware d'authentification
+
   // Vérifie le token et injecte l'utilisateur
 
 const authorize = async (req, res, next) => {
@@ -30,6 +31,7 @@ const authorize = async (req, res, next) => {
 
 
    //Middleware d'autorisation par rôle
+   
    //Exemple d'utilisation : authorizeRole(['Admin', 'SuperAdmin'])
 
 const authorizeRole = (allowedRoles = []) => {
